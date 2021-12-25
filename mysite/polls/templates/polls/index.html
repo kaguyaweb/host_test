@@ -1,0 +1,33 @@
+<!--
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+-->
+
+<html>
+    <head>
+        <!-- {% load static %} -->
+        <title>debug</title>
+        <meta http-equiv="content-type" charset="utf-8">
+    </head>
+    <body>
+        <form action="{% url 'polls:detail' %}" method="post">
+            {% csrf_token %}
+            <div>
+                <label for="topic_word">話題</label>
+                <input type="text" id="topic" name="topic">
+                <button>送信</button>
+            </div>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>analysis</title>
+        {% load static %}
+
+        <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+    </head>
+    <body>
+        <p>{{ no_count }} / 100 : 辞書には単語がない文章です。</p>
+        {% if text_count in no_count_text %}
+        <p>これが辞書には単語がなかった文章です</p>
+        {% else %}
+        <p>この文章は辞書に単語があった文章です</p>
+        {% endif %}
+        <div class="DivLink" id="text"> {{ tweet_text }} <br /> </div>
+        <div align="center">
+            <img src="{% static 'polls/out.png' %}" alt="graph">
+        </div>
+        {% for key,value  in emotion_count.items %}
+        {% if key == 0 %}
+        <p>悲しみ: </p>
+        {% elif key == 1 %}
+        <p>不安: </p>
+        {% elif key == 2 %}
+        <p>怒り: </p>
+        {% elif key == 3 %}
+        <p>嫌悪感: </p>
+        {% elif key == 4 %}
+        <p>信頼: </p>
+        {% elif key == 5 %}
+        <p>驚き: </p>
+        {% elif key == 6 %}
+        <p>喜び: </p>
+        {% endif %}
+
+        <div class="DivLink" id="text"> {{ value }} <br /> </div>
+        {% endfor %}
+
+    </body>
+</html>

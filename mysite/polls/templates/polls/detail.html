@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Tweet 表示</title>
+        {% load static %}
+
+        <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+    </head>
+    <body>
+        <p>話題: {{ topic }} </p>
+        {% for text in texts %}
+        <div class="DivLink" id="text"> 
+            {{ text }} <br>   
+        </div>
+        <form  action="{% url 'polls:results' %}" method="POST">
+            {% csrf_token %}
+            <div align="center">
+                <input type="hidden" name="tweet_text" value="{{ text }}">
+                <input type="hidden" name="text_list" value="{{ copy_texts }}">
+                <input type="hidden" name="text_count" value="{{ forloop.counter0 }}">
+                <button type="submit" >上の文書を詳しく見る</button>
+            </div>
+        </form>
+        {% endfor %}
+    </body>
+</html>
