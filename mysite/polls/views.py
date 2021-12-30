@@ -13,6 +13,7 @@ import codecs
 import numpy as np
 import matplotlib.pyplot as plt
 from .models import Topic, Tweet
+import random
 
 def get_tweet(query):
     CONSUMER_KEY = 'afyFGi1n0yw5hfoCNZf1BVB9M'
@@ -45,6 +46,10 @@ def get_tweet(query):
             
     return texts
 
+def random_list(texts):
+    return random.sample(texts, 20)
+
+
 
 def detail(request):
     query = request.POST['topic']
@@ -52,9 +57,11 @@ def detail(request):
     copy_texts = texts
     copy_texts = ','.join(copy_texts)
 
+    random_texts = random_list(texts)
+
     context = {
         'topic' : query,
-        'texts' : texts,
+        'texts' : random_texts,
         'copy_texts' : copy_texts
     }
     return render(request, 'polls/detail.html', context)
