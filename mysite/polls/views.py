@@ -1,9 +1,5 @@
-#from datetime import date
-from django.shortcuts import render #, get_object_or_404
-#from django.http import HttpResponseRedirect, Http404
-#from django.urls import reverse
+from django.shortcuts import render
 from django.views import generic
-#from django.utils import timezone
 import io
 import re
 import json
@@ -12,7 +8,6 @@ from janome.tokenizer import Tokenizer
 import codecs
 import numpy as np
 import matplotlib.pyplot as plt
-from .models import Topic, Tweet
 import random
 
 def get_tweet(query):
@@ -34,7 +29,7 @@ def get_tweet(query):
 
     req = twitter.get(url, params = params)
     # 文章リスト
-    texts = [] 
+    texts = []
 
     if req.status_code == 200:
         res = json.loads(req.text)
@@ -43,13 +38,11 @@ def get_tweet(query):
             text = re.sub(r'https?://[\w/:%#\$&\?\(\)~\.=\+\-…]+', "", line['full_text'])
             text = re.sub('@.+:\s', "", line['full_text'])
             texts.append(text)
-            
+
     return texts
 
 def random_list(texts):
-    return random.sample(texts, 20)
-
-
+    return random.sample(texts, 30)
 
 def detail(request):
     query = request.POST['topic']
@@ -57,11 +50,9 @@ def detail(request):
     copy_texts = texts
     copy_texts = ','.join(copy_texts)
 
-    random_texts = random_list(texts)
-
     context = {
         'topic' : query,
-        'texts' : random_texts,
+        'texts' : texts,
         'copy_texts' : copy_texts
     }
     return render(request, 'polls/detail.html', context)
@@ -69,10 +60,10 @@ def detail(request):
 # JIWC-A_2018.csvファイルから、単語をキー、極性値を値とする辞書を得る
 def load_pn_dict():
     dic = {}
-    
-    with codecs.open('polls/JIWC-A_2018-2019.csv', 'r', 'shift-jis') as f:
+
+    with codecs.open('/home/kag/host_test/mysite/polls/JIWC-A_2018-2019.csv', 'r', 'shift-jis') as f:
         lines = f.readlines()
-        
+
         TrueFlag = True
         for line in lines:
             # 各行は"良い:よい:形容詞:0.999995"
@@ -84,18 +75,18 @@ def load_pn_dict():
             #Sadness,Anxiety,Anger,Disgust,Trust,Surprise,Joy
             #悲しみ,不安,怒り,嫌悪感,信頼,驚き,喜び
             dic[columns[0]] = [float(columns[1]),float(columns[2]),float(columns[3]),float(columns[4]),float(columns[5]),float(columns[6]),float(columns[7])]
-            
+
     return dic
- 
- 
+
+
 # トークンリストから極性値リストを得る
 def get_pn_scores(tokens, pn_dic):
     scores = []
-    
+
     for surface in [t.surface for t in tokens if t.part_of_speech.split(',')[0] in ['動詞','名詞', '形容詞', '副詞', '形容動詞']]:
         if surface in pn_dic:
             scores.append(pn_dic[surface])
-            
+
     return scores
 
 def python_list_add(lst1, lst2):
@@ -108,7 +99,7 @@ def get_pn_scores_sum(tokens, pn_dic):
     #初期化することで、もし感情辞書に載っていない単語しかない文章が出てきてもエラー回避できる
     scores = [0, 0, 0, 0, 0, 0, 0]
     count = 0.0001
-    
+
     Firstflag = True
     for surface in [t.surface for t in tokens if t.part_of_speech.split(',')[0] in ['動詞','名詞', '形容詞', '副詞', '形容動詞']]:
         if Firstflag:
@@ -144,7 +135,7 @@ def find_min(text_score):
     for i in range(len(text_score)):
         if text_score[min] == text_score[i] and min != i:
             index_min.append(i)
-    
+
     return index_min
 
 def find_not_max(text_score):
@@ -153,11 +144,11 @@ def find_not_max(text_score):
     for i in range(len(text_score)):
         if text_score[max] < text_score[i]:
             max = i
-    
+
     for i in range(len(text_score)):
         if i is not max or text_score[max] == 0.0:
             index_not_max.append(i)
-    
+
     return index_not_max
 
 
@@ -172,13 +163,13 @@ def no_word(texts):
         if texts[i].word_count == 0.0001:
             count += 1
             count_index.append(i)
-    
+
     return count, count_index
 
 def show_graph(element):
     ## labels = ["悲しみ", "不安", "怒り", "嫌悪感", "信頼", "驚き", "喜び"]
     labels = ["Sadness", "Anxiety", "Anger", "Disgust", "Trust", "Surprise", "Joy"]
-    
+
     values = np.array([element.pn_scores[0]/element.word_count, element.pn_scores[1]/element.word_count, element.pn_scores[2]/element.word_count,
                        element.pn_scores[3]/element.word_count, element.pn_scores[4]/element.word_count, element.pn_scores[5]/element.word_count,
                        element.pn_scores[6]/element.word_count])
@@ -200,7 +191,7 @@ def show_graph(element):
     ax.set_title("radar chart", pad=20)
     ## print('Sentence: {}'.format(io.StringIO(element.text).read()))
     ## plt.show()
-    plt.savefig('polls/static/polls/out.png')
+    plt.savefig('/home/kag/host_test/mysite/static/polls/out.png')
 
 def analysis_tweet(request):
     class CorpusElement:
@@ -217,9 +208,9 @@ def analysis_tweet(request):
     text_list = text_list.split(',')
     for text in text_list:
         text = re.sub(r'\s', '', text)
-    
+
     naive_corpus = []
- 
+
     naive_tokenizer = Tokenizer()
 
     for text in text_list:
@@ -245,7 +236,7 @@ def analysis_tweet(request):
     find_text = []
     for i in range(len(min)):
         find_text.append(text_find(naive_corpus, min[i]))
-    
+
     find_text_dict = {}
     for i in range(len(min)):
         find_text_dict[min[i]] = text_find(naive_corpus, min[i])
@@ -259,7 +250,7 @@ def analysis_tweet(request):
         #'find_text' : find_text_dict # min
     }
     return render(request, 'polls/results.html', context)
-    
+
 
 #def results(request, question_id):
 #    question = get_object_or_404(Question, pk=question_id)
@@ -277,16 +268,3 @@ class IndexView(generic.ListView):
     #    return Question.objects.filter(
     #        pub_date__lte=timezone.now()
     #    ).order_by('-pub_date')[:5]
-
-class DetailView(generic.DetailView):
-    model = Topic
-    template_name = 'polls/detail.html'
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        #return Question.objects.filter(pub_date__lte=timezone.now())
-
-class ResultsView(generic.DetailView):
-    model = Topic
-    template_name = 'polls/results.html'
