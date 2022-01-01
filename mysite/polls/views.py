@@ -20,7 +20,9 @@ def get_tweet(query):
     # Twitter Endpoint(検索結果を取得する)
     url = 'https://api.twitter.com/1.1/search/tweets.json?tweet_mode=extended'
 
-    keyword = query + ' -filter:replies'
+    # (min_faves:100 OR min_retweets:100 OR min_replies:10)
+
+    keyword = query + ':) -filter:replies -filter:images lang:ja'
     params ={
          'count' : 100,      # 取得するtweet数
          'exclude': 'retweets',  #RTを除外
