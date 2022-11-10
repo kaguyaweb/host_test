@@ -6,9 +6,8 @@
         <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
     </head>
     <body>
-        <p>{{ no_count }} / 100 : 辞書には単語がない文章です。</p>
         {% if text_count in no_count_text %}
-        <p>これが辞書には単語がなかった文章です</p>
+        <p>これは辞書には単語がなかった文章です</p>
         {% endif %}
         <div class="DivLink" id="text"> {{ tweet_text }} <br /> </div>
         <div align="center">

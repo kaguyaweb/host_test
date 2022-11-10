@@ -1,0 +1,142 @@
+<html>
+    <head>
+        <title>Tweet 表示</title>
+        {% load static %}
+
+        <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+    </head>
+    <body>
+        <p>話題: {{ topic }} </p>
+        <div id="p1">
+            {% for text in texts %}
+            {% if forloop.counter0 < 20 %}
+            <div class="DivLink">
+                {{ text }} <br>
+            </div>
+            {% if forloop.counter0 == 19 %}
+            <div align="center">
+                <h1>ここで20件目</h1>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div id="p2">
+            {% for text in texts %}
+            {% if 20 <= forloop.counter0 and forloop.counter0 < 40 %}
+            <div class="DivLink">
+                {{ text }} <br>
+            </div>
+            {% if forloop.counter0 == 39 %}
+            <div align="center">
+                <h1>ここで40件目</h1>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div id="p3">
+            {% for text in texts %}
+            {% if 40 <= forloop.counter0 and forloop.counter0 < 60 %}
+            <div class="DivLink">
+                {{ text }} <br>
+            </div>
+            {% if forloop.counter0 == 59 %}
+            <div align="center">
+                <h1>ここで60件目</h1>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div id="p4">
+            {% for text in texts %}
+            {% if 60 <= forloop.counter0 and forloop.counter0 < 80 %}
+            <div class="DivLink">
+                {{ text }} <br>
+            </div>
+            {% if forloop.counter0 == 79 %}
+            <div align="center">
+                <h1>ここで80件目</h1>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div id="p5">
+            {% for text in texts %}
+            {% if 80 <= forloop.counter0 and forloop.counter0 < 100 %}
+            <div class="DivLink">
+                {{ text }} <br>
+            </div>
+            {% if forloop.counter0 == 99 %}
+            <div align="center">
+                <h1>ここで100件目</h1>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        <!--
+        <input type="button" value="1-20件表示" onclick="clickBtn1()" />
+        <input type="button" value="21-40件表示" onclick="clickBtn2()" />
+        <input type="button" value="41-60件表示" onclick="clickBtn3()" />
+        <input type="button" value="61-80件表示" onclick="clickBtn4()" />
+        <input type="button" value="81-100件表示" onclick="clickBtn5()" />
+        -->
+        <script>
+        //初期表示は非表示
+        document.getElementById("p1").style.display ="block";
+        document.getElementById("p2").style.display ="block";
+        document.getElementById("p3").style.display ="block";
+        document.getElementById("p4").style.display ="block";
+        document.getElementById("p5").style.display ="block";
+
+        function clickBtn1(){
+	        const p1 = document.getElementById("p1");
+
+	        if(p1.style.display=="none") {
+                p1.style.display = "block"
+            }
+        }
+        function clickBtn2(){
+            const p1 = document.getElementById("p1");
+	        const p2 = document.getElementById("p2");
+
+            if(p1.style.display=="block" && p2.style.display=="none") {
+                p2.style.display = "block"
+            }
+        }
+        function clickBtn3(){
+            const p1 = document.getElementById("p1");
+	        const p2 = document.getElementById("p2");
+	        const p3 = document.getElementById("p3");
+
+	        if(p1.style.display=="block" && p2.style.display=="block" && p3.style.display=="none") {
+                p3.style.display = "block"
+            }
+        }
+        function clickBtn4(){
+            const p1 = document.getElementById("p1");
+	        const p2 = document.getElementById("p2");
+	        const p3 = document.getElementById("p3");
+	        const p4 = document.getElementById("p4");
+
+	        if(p1.style.display=="block" && p2.style.display=="block" && p3.style.display=="block" && p4.style.display=="none") {
+                p4.style.display = "block"
+            }
+        }
+        function clickBtn5(){
+            const p1 = document.getElementById("p1");
+	        const p2 = document.getElementById("p2");
+	        const p3 = document.getElementById("p3");
+	        const p4 = document.getElementById("p4");
+	        const p5 = document.getElementById("p5");
+
+	        if(p1.style.display=="block" && p2.style.display=="block" && p3.style.display=="block" && p4.style.display=="block" && p5.style.display=="none") {
+                p5.style.display = "block"
+            }
+        }
+        </script>
+    </body>
+</html>

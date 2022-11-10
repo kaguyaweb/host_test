@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>analysis</title>
+        {% load static %}
+
+        <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+    </head>
+    <body>
+        {% if text_count in no_count_text %}
+        <p>これは辞書には単語がなかった文章です</p>
+        {% endif %}
+        <div class="DivLink" id="text"> {{ tweet_text }} <br /> </div>
+        <div align="center">
+            <img src="{% static 'polls/out.png' %}" alt="graph">
+        </div>
+    </body>
+</html>

@@ -20,7 +20,9 @@ def get_tweet(query):
     # Twitter Endpoint(検索結果を取得する)
     url = 'https://api.twitter.com/1.1/search/tweets.json?tweet_mode=extended'
 
-    keyword = query + ' -filter:replies'
+    # (min_faves:100 OR min_retweets:100 OR min_replies:10)
+
+    keyword = query + ' -filter:replies -filter:images lang:ja'
     params ={
          'count' : 100,      # 取得するtweet数
          'exclude': 'retweets',  #RTを除外
@@ -57,11 +59,36 @@ def detail(request):
     }
     return render(request, 'polls/detail.html', context)
 
+def detail2(request):
+    query = request.POST['topic']
+    texts = get_tweet(query)
+    copy_texts = texts
+    copy_texts = ','.join(copy_texts)
+
+    context = {
+        'topic' : query,
+        'texts' : texts,
+    }
+    return render(request, 'polls/detail2.html', context)
+
+def detail3(request):
+    query = request.POST['topic']
+    texts = get_tweet(query)
+    copy_texts = texts
+    copy_texts = ','.join(copy_texts)
+
+    context = {
+        'topic' : query,
+        'texts' : texts,
+        'copy_texts' : copy_texts
+    }
+    return render(request, 'polls/detail3.html', context)
+
 # JIWC-A_2018.csvファイルから、単語をキー、極性値を値とする辞書を得る
 def load_pn_dict():
     dic = {}
 
-    with codecs.open('/home/kag/host_test/mysite/polls/JIWC-A_2018-2019.csv', 'r', 'shift-jis') as f:
+    with codecs.open('/home/kagcom/host_test/mysite/polls/JIWC-A_2018-2019.csv', 'r', 'shift-jis') as f:
         lines = f.readlines()
 
         TrueFlag = True
@@ -154,7 +181,8 @@ def find_not_max(text_score):
 
 def text_find(texts, min):
     element = sorted(texts, key=lambda e: e.pn_scores[min]/e.word_count, reverse=True)
-    return io.StringIO(element[0].text).read()
+    i = random.randint(0,4)
+    return io.StringIO(element[i].text).read()
 
 def no_word(texts):
     count = 0
@@ -191,7 +219,7 @@ def show_graph(element):
     ax.set_title("radar chart", pad=20)
     ## print('Sentence: {}'.format(io.StringIO(element.text).read()))
     ## plt.show()
-    plt.savefig('/home/kag/host_test/mysite/static/polls/out.png')
+    plt.savefig('/home/kagcom/host_test/mysite/static/polls/out.png')
 
 def analysis_tweet(request):
     class CorpusElement:
@@ -242,7 +270,7 @@ def analysis_tweet(request):
         find_text_dict[min[i]] = text_find(naive_corpus, min[i])
 
     context = {
-        'no_count' : no_count,
+        #'no_count' : no_count,
         'text_count' : text_count,
         'no_count_text' : no_word(naive_corpus)[1],
         'tweet_text' : tweet_text,
@@ -250,6 +278,62 @@ def analysis_tweet(request):
         #'find_text' : find_text_dict # min
     }
     return render(request, 'polls/results.html', context)
+
+def analysis_tweet2(request):
+    class CorpusElement:
+        def __init__(self, text='', tokens=[], pn_scores=[], word_count=float()):
+            self.text = text # テキスト本文
+            self.tokens = tokens # 構文木解析されたトークンのリスト
+            self.pn_scores = pn_scores # 感情極性値(後述)
+            self.word_count = word_count
+
+    tweet_text = request.POST['tweet_text']
+    text_list = request.POST.get('text_list')
+    text_count = request.POST['text_count']
+    text_count = int(text_count)
+    text_list = text_list.split(',')
+    for text in text_list:
+        text = re.sub(r'\s', '', text)
+
+    naive_corpus = []
+
+    naive_tokenizer = Tokenizer()
+
+    for text in text_list:
+        tokens = naive_tokenizer.tokenize(text)
+        element = CorpusElement(text, tokens)
+        naive_corpus.append(element)
+
+    # 感情極性対応表のロード
+    pn_dic = load_pn_dict()
+
+    # 各文章の極性値リストを得る
+    for element in naive_corpus:
+        #element.pn_scores = get_pn_scores(element.tokens, pn_dic)
+        result = get_pn_scores_sum(element.tokens, pn_dic)
+        element.pn_scores = result[0]
+        element.word_count = result[1]
+
+    show_graph(naive_corpus[text_count])
+    ## min = function.find_min(naive_corpus[text_count].pn_scores)
+    min = find_not_max(naive_corpus[text_count].pn_scores)
+    no_count = no_word(naive_corpus)[0]
+
+    find_text = []
+    for i in range(len(min)):
+        find_text.append(text_find(naive_corpus, min[i]))
+
+    find_text_dict = {}
+    for i in range(len(min)):
+        find_text_dict[min[i]] = text_find(naive_corpus, min[i])
+
+    context = {
+        #'no_count' : no_count,
+        'text_count' : text_count,
+        'tweet_text' : tweet_text,
+        #'find_text' : find_text_dict # min
+    }
+    return render(request, 'polls/results2.html', context)
 
 
 #def results(request, question_id):

@@ -122,18 +122,20 @@
             {% endif %}
             {% endfor %}
         </div>
+        <!--
         <input type="button" value="1-20件表示" onclick="clickBtn1()" />
         <input type="button" value="21-40件表示" onclick="clickBtn2()" />
         <input type="button" value="41-60件表示" onclick="clickBtn3()" />
         <input type="button" value="61-80件表示" onclick="clickBtn4()" />
         <input type="button" value="81-100件表示" onclick="clickBtn5()" />
+        -->
         <script>
         //初期表示は非表示
-        document.getElementById("p1").style.display ="none";
-        document.getElementById("p2").style.display ="none";
-        document.getElementById("p3").style.display ="none";
-        document.getElementById("p4").style.display ="none";
-        document.getElementById("p5").style.display ="none";
+        document.getElementById("p1").style.display ="block";
+        document.getElementById("p2").style.display ="block";
+        document.getElementById("p3").style.display ="block";
+        document.getElementById("p4").style.display ="block";
+        document.getElementById("p5").style.display ="block";
 
         function clickBtn1(){
 	        const p1 = document.getElementById("p1");

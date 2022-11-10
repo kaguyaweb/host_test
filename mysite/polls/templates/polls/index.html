@@ -1,17 +1,39 @@
 <html>
     <head>
         <!-- {% load static %} -->
-        <title>debug</title>
+        <title>練習</title>
         <meta http-equiv="content-type" charset="utf-8">
     </head>
     <body>
-        <form action="{% url 'polls:detail' %}" method="post">
+        <h1>練習</h1>
+        <p>
+        <div style="display:inline-flex">
+        <form action="{% url 'polls:detail2' %}" method="post">
             {% csrf_token %}
             <div>
                 <label for="topic_word">話題</label>
-                <input type="text" id="topic" name="topic">
-                <button>送信</button>
+                <input type="hidden" id="topic" name="topic" value="インフルエンザ">
+                <button type="submit">インフルエンザ　従来</button>
             </div>
         </form>
+        <form action="{% url 'polls:detail3' %}" method="post">
+            {% csrf_token %}
+            <div>
+                <input type="hidden" id="topic" name="topic" value="インフルエンザ">
+                <button type="submit" disabled>インフルエンザ　提案</button>
+            </div>
+        </form>
+        <form action="{% url 'polls:detail' %}" method="post">
+            {% csrf_token %}
+            <div>
+                <input type="hidden" id="topic" name="topic" value="インフルエンザ">
+                <button type="submit">インフルエンザ　提案2</button>
+            </div>
+        </form>
+        </div>
+        </p>
+        <p>従来:ツイートの文章のみ表示</p>
+        <p>提案:レーダーチャートを加えて表示</p>
+        <p>提案2:レーダーチャートと他の感情の文章を加えて表示</p>
     </body>
 </html>
