@@ -11,10 +11,10 @@ import matplotlib.pyplot as plt
 import random
 
 def get_tweet(query):
-    CONSUMER_KEY = 'afyFGi1n0yw5hfoCNZf1BVB9M'
-    CONSUMER_SECRET = '4j2M8l4kYQ1Dr5Jwch3saNgRherc1FZI6lvGxNIE6qLkw5TeFl'
-    ACCESS_TOKEN = '1423191244440674304-jl15GqAS4MFxiLOAbFldofkcXFyhbp'
-    ACCESS_TOKEN_SECRET = 'vWoJIXNorBimElWPh88ymvEHHS3ZnxQ7XeVfCxZwBhEeS'
+    CONSUMER_KEY = '*********'
+    CONSUMER_SECRET = '*********'
+    ACCESS_TOKEN = '********'
+    ACCESS_TOKEN_SECRET = '********'
     twitter = OAuth1Session(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
     # Twitter Endpoint(検索結果を取得する)
